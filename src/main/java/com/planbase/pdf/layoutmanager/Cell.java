@@ -14,15 +14,11 @@
 
 package com.planbase.pdf.layoutmanager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated 
- based on how the content is rendered with regard to line-breaks and page-breaks.
+ * A styled table cell or layout block with a pre-set horizontal width.  Vertical height is calculated
+ * based on how the content is rendered with regard to line-breaks and page-breaks.
  */
 public class Cell implements Renderable {
 
@@ -33,13 +29,17 @@ public class Cell implements Renderable {
     // A list of the contents.  It's pretty limiting to have one item per row.
     private final List<Renderable> rows;
 
-    private final Map<Float,PreCalcRows> preCalcRows = new HashMap<Float,PreCalcRows>(0);
+    private final Map<Float, PreCalcRows> preCalcRows = new HashMap<Float, PreCalcRows>(0);
 
     private static class PreCalcRow {
         Renderable row;
         XyDim blockDim;
+
         public static PreCalcRow of(Renderable r, XyDim d) {
-            PreCalcRow pcr = new PreCalcRow(); pcr.row = r; pcr.blockDim = d; return pcr;
+            PreCalcRow pcr = new PreCalcRow();
+            pcr.row = r;
+            pcr.blockDim = d;
+            return pcr;
         }
     }
 
@@ -57,16 +57,18 @@ public class Cell implements Renderable {
 //                throw new IllegalArgumentException("How am I supposed to render a null?");
 //            }
 //        }
-        cellStyle = cs; width = w; rows = rs;
+        cellStyle = cs;
+        width = w;
+        rows = rs;
     }
 
     /**
-     Creates a new cell.
-
-     @param w the width (height will be calculated based on how objects can be rendered within this
-         width).
-     @param cs the cell style
-     @return a cell suitable for rendering.
+     * Creates a new cell.
+     *
+     * @param w  the width (height will be calculated based on how objects can be rendered within this
+     *           width).
+     * @param cs the cell style
+     * @return a cell suitable for rendering.
      */
     public static Cell of(CellStyle cs, float w) { //, final Object... r) {
         return new Cell(cs, w, Collections.<Renderable>emptyList());
@@ -111,9 +113,14 @@ public class Cell implements Renderable {
         return new Cell(cs, w, ls);
     }
 
-    public CellStyle cellStyle() { return cellStyle; }
+    public CellStyle cellStyle() {
+        return cellStyle;
+    }
+
     // public BorderStyle border() { return borderStyle; }
-    public float width() { return width; }
+    public float width() {
+        return width;
+    }
 
     private void calcDimensionsForReal(final float maxWidth) {
         PreCalcRows pcrs = new PreCalcRows();
@@ -126,7 +133,7 @@ public class Cell implements Renderable {
         for (Renderable row : rows) {
             XyDim rowDim = (row == null) ? XyDim.ZERO : row.calcDimensions(innerWidth);
             blockDim = XyDim.of(Math.max(blockDim.x(), rowDim.x()),
-                                blockDim.y() + rowDim.y());
+                    blockDim.y() + rowDim.y());
 //            System.out.println("\trow = " + row);
 //            System.out.println("\trowDim = " + rowDim);
 //            System.out.println("\tactualDim = " + actualDim);
@@ -201,7 +208,7 @@ public class Cell implements Renderable {
 //        System.out.println("\tCell.render alignPad=" + alignPad);
         if (alignPad != null) {
             innerTopLeft = XyOffset.of(innerTopLeft.x() + alignPad.left(),
-                                       innerTopLeft.y() - alignPad.top());
+                    innerTopLeft.y() - alignPad.top());
         }
 
         XyOffset outerLowerRight = innerTopLeft;
@@ -213,8 +220,8 @@ public class Cell implements Renderable {
             PreCalcRow pcr = pcrs.rows.get(i);
             float rowXOffset = cellStyle.align().leftOffset(wrappedBlockDim.x(), pcr.blockDim.x());
             outerLowerRight = row.render(lp,
-                                         innerTopLeft.x(innerTopLeft.x() + rowXOffset),
-                                         pcr.blockDim, allPages);
+                    innerTopLeft.x(innerTopLeft.x() + rowXOffset),
+                    pcr.blockDim, allPages);
             innerTopLeft = outerLowerRight.x(innerTopLeft.x());
         }
 
@@ -271,22 +278,40 @@ public class Cell implements Renderable {
         private final List<Renderable> rows = new ArrayList<Renderable>();
         private TextStyle textStyle;
 
-        private Builder(CellStyle cs, float w) { width = w; cellStyle = cs; }
+        private Builder(CellStyle cs, float w) {
+            width = w;
+            cellStyle = cs;
+        }
 
         // Is this necessary?
 //        public Builder width(float w) { width = w; return this; }
 
-        public Builder cellStyle(CellStyle cs) { cellStyle = cs; return this;}
+        public Builder cellStyle(CellStyle cs) {
+            cellStyle = cs;
+            return this;
+        }
 
-        public Builder align(CellStyle.Align align) { cellStyle = cellStyle.align(align); return this;}
+        public Builder align(CellStyle.Align align) {
+            cellStyle = cellStyle.align(align);
+            return this;
+        }
 
-        public Builder textStyle(TextStyle x) { textStyle = x; return this; }
+        public Builder textStyle(TextStyle x) {
+            textStyle = x;
+            return this;
+        }
 
         // This is a builder which is not Renderable.  No way to add something to itself *here*.
-        public Builder add(Renderable... rs) { Collections.addAll(rows, rs); return this; }
+        public Builder add(Renderable... rs) {
+            Collections.addAll(rows, rs);
+            return this;
+        }
 
         public Builder add(List<Renderable> js) {
-            if (js != null) { rows.addAll(js); } return this;
+            if (js != null) {
+                rows.addAll(js);
+            }
+            return this;
         }
 
         public Builder add(TextStyle ts, List<String> ls) {
@@ -309,7 +334,9 @@ public class Cell implements Renderable {
         }
 //        public Builder add(Cell c) { rows.add(c); return this; }
 
-        public Cell build() { return new Cell(cellStyle, width, rows); }
+        public Cell build() {
+            return new Cell(cellStyle, width, rows);
+        }
 
 // Replaced with TableRow.CellBuilder.buildCell()
 //        public TableRowBuilder buildCell() {
@@ -317,24 +344,30 @@ public class Cell implements Renderable {
 //            return trb.addCell(c);
 //        }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             StringBuilder sB = new StringBuilder("Cell.Builder(").append(cellStyle).append(" width=")
                     .append(width).append(" rows=[");
 
             for (int i = 0; (i < rows.size()) && (i < 3); i++) {
-                if (i > 0) { sB.append(" "); }
+                if (i > 0) {
+                    sB.append(" ");
+                }
                 sB.append(rows.get(i));
             }
             return sB.append("])").toString();
         }
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         StringBuilder sB = new StringBuilder("Cell(").append(cellStyle).append(" width=")
                 .append(width).append(" rows=[");
 
         for (int i = 0; (i < rows.size()) && (i < 3); i++) {
-            if (i > 0) { sB.append(" "); }
+            if (i > 0) {
+                sB.append(" ");
+            }
             sB.append(rows.get(i));
         }
         return sB.append("])").toString();

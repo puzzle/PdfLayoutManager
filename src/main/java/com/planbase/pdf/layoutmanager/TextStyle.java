@@ -14,14 +14,14 @@
 
 package com.planbase.pdf.layoutmanager;
 
-import java.awt.Color;
-import java.io.IOException;
-
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.awt.*;
+import java.io.IOException;
+
 /**
-Specifies font, font-size, color, and padding.  Immutable.
+ * Specifies font, font-size, color, and padding.  Immutable.
  */
 public class TextStyle {
 
@@ -37,10 +37,16 @@ public class TextStyle {
     private final float leading;
 
     private TextStyle(PDType1Font f, float sz, Color tc) {
-        if (f == null) { throw new IllegalArgumentException("Font must not be null"); }
-        if (tc == null) { tc = Color.BLACK; }
+        if (f == null) {
+            throw new IllegalArgumentException("Font must not be null");
+        }
+        if (tc == null) {
+            tc = Color.BLACK;
+        }
 
-        font = f; textColor = tc; fontSize = sz;
+        font = f;
+        textColor = tc;
+        fontSize = sz;
         // Somewhere it says that font units are 1000 times page units, but my tests with
         // PDType1Font.HELVETICA and PDType1Font.HELVETICA_BOLD from size 5-200 show that 960x is
         // pretty darn good.
@@ -71,9 +77,10 @@ public class TextStyle {
     }
 
     /**
-     Assumes ISO_8859_1 encoding
-     @param text ISO_8859_1 encoded text
-     @return the width of this text rendered in this font.
+     * Assumes ISO_8859_1 encoding
+     *
+     * @param text ISO_8859_1 encoded text
+     * @return the width of this text rendered in this font.
      */
     public float stringWidthInDocUnits(String text) {
         try {
@@ -85,22 +92,52 @@ public class TextStyle {
         }
     }
 
-    public PDType1Font font() { return font; }
-    public float fontSize() { return fontSize; }
+    public PDType1Font font() {
+        return font;
+    }
 
-    public Color textColor() { return textColor; }
-    public TextStyle textColor(Color c) { return TextStyle.of(font, fontSize, c); }
+    public float fontSize() {
+        return fontSize;
+    }
+
+    public Color textColor() {
+        return textColor;
+    }
+
+    public TextStyle textColor(Color c) {
+        return TextStyle.of(font, fontSize, c);
+    }
+
     /**
-     Average character width (for this font, or maybe guessed) as a positive number in document
-     units
+     * Average character width (for this font, or maybe guessed) as a positive number in document
+     * units
      */
-    public float avgCharWidth() { return avgCharWidth; }
-    /** Ascent as a positive number in document units */
-    public float ascent() { return ascent; }
-    /** Descent as a positive number in document units */
-    public float descent() { return descent; }
-    /** Leading as a positive number in document units */
-    public float leading() { return leading; }
+    public float avgCharWidth() {
+        return avgCharWidth;
+    }
 
-    public float lineHeight() { return ascent + descent + leading; }
+    /**
+     * Ascent as a positive number in document units
+     */
+    public float ascent() {
+        return ascent;
+    }
+
+    /**
+     * Descent as a positive number in document units
+     */
+    public float descent() {
+        return descent;
+    }
+
+    /**
+     * Leading as a positive number in document units
+     */
+    public float leading() {
+        return leading;
+    }
+
+    public float lineHeight() {
+        return ascent + descent + leading;
+    }
 }

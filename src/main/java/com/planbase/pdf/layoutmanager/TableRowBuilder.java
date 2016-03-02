@@ -18,9 +18,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- Unsynchronized mutable class which is not thread-safe.  The internal tracking of cells and widths
- allows you to make a cell builder for a cell at a given column, add cells in subsequent columns,
- then complete (buildCell()) the cell and have it find its proper (now previous) column.
+ * Unsynchronized mutable class which is not thread-safe.  The internal tracking of cells and widths
+ * allows you to make a cell builder for a cell at a given column, add cells in subsequent columns,
+ * then complete (buildCell()) the cell and have it find its proper (now previous) column.
  */
 public class TableRowBuilder {
     private final TablePart tablePart;
@@ -49,12 +49,22 @@ public class TableRowBuilder {
         return tablePart.cellWidths().get(nextCellIdx).floatValue();
     }
 
-    public static TableRowBuilder of(TablePart tp) { return new TableRowBuilder(tp); }
+    public static TableRowBuilder of(TablePart tp) {
+        return new TableRowBuilder(tp);
+    }
 
-    public TextStyle textStyle() { return textStyle; }
-    public TableRowBuilder textStyle(TextStyle x) { textStyle = x; return this; }
+    public TextStyle textStyle() {
+        return textStyle;
+    }
 
-    public CellStyle cellStyle() { return cellStyle; }
+    public TableRowBuilder textStyle(TextStyle x) {
+        textStyle = x;
+        return this;
+    }
+
+    public CellStyle cellStyle() {
+        return cellStyle;
+    }
 
     public TableRowBuilder addCells(Cell... cs) {
         Collections.addAll(cells, cs);
@@ -62,7 +72,9 @@ public class TableRowBuilder {
         return this;
     }
 
-    public int nextCellIdx() { return nextCellIdx; }
+    public int nextCellIdx() {
+        return nextCellIdx;
+    }
 
     public TableRowBuilder addTextCells(String... ss) {
         if (textStyle == null) {
@@ -110,7 +122,10 @@ public class TableRowBuilder {
         return this;
     }
 
-    public TableRowBuilder minRowHeight(float f) { minRowHeight = f; return this; }
+    public TableRowBuilder minRowHeight(float f) {
+        minRowHeight = f;
+        return this;
+    }
 
     public RowCellBuilder cellBuilder() {
         RowCellBuilder cb = new RowCellBuilder(this);
@@ -132,7 +147,7 @@ public class TableRowBuilder {
         for (Cell cell : cells) {
             XyDim wh = cell.calcDimensions(cell.width());
             maxDim = XyDim.of(wh.x() + maxDim.x(),
-                              Math.max(maxDim.y(), wh.y()));
+                    Math.max(maxDim.y(), wh.y()));
         }
         return maxDim;
     }
@@ -143,7 +158,7 @@ public class TableRowBuilder {
         for (Cell cell : cells) {
             XyDim wh = cell.calcDimensions(cell.width());
             maxDim = XyDim.of(maxDim.x() + cell.width(),
-                              Math.max(maxDim.y(), wh.y()));
+                    Math.max(maxDim.y(), wh.y()));
         }
         float maxHeight = maxDim.y();
 
@@ -152,7 +167,7 @@ public class TableRowBuilder {
 //            System.out.println("\t\tAbout to render cell: " + cell);
             // TODO: Cache the duplicate cell.calcDimensions call!!!
             cell.render(lp, XyOffset.of(x, outerTopLeft.y()),
-                        XyDim.of(cell.width(), maxHeight), allPages);
+                    XyDim.of(cell.width(), maxHeight), allPages);
             x += cell.width();
         }
         return XyOffset.of(x, outerTopLeft.y() - maxHeight);
@@ -175,29 +190,48 @@ public class TableRowBuilder {
         private final int colIdx;
 
         private RowCellBuilder(TableRowBuilder trb) {
-            tableRowBuilder = trb; width = trb.nextCellSize(); cellStyle = trb.cellStyle();
-            textStyle = trb.textStyle(); colIdx = trb.nextCellIdx();
+            tableRowBuilder = trb;
+            width = trb.nextCellSize();
+            cellStyle = trb.cellStyle();
+            textStyle = trb.textStyle();
+            colIdx = trb.nextCellIdx();
         }
 
         // I think setting the width after creation is a pretty bad idea for this class since so much
         // is put into getting the width and column correct.
         // public TableRowCellBuilder width(float w) { width = w; return this; }
 
-        public RowCellBuilder cellStyle(CellStyle cs) { cellStyle = cs; return this;}
-
-        public RowCellBuilder borderStyle(BorderStyle bs) { cellStyle = cellStyle.borderStyle(bs); return this;}
-
-        public RowCellBuilder align(CellStyle.Align align) {
-            cellStyle = cellStyle.align(align); return this;
+        public RowCellBuilder cellStyle(CellStyle cs) {
+            cellStyle = cs;
+            return this;
         }
 
-        public RowCellBuilder textStyle(TextStyle x) { textStyle = x; return this; }
+        public RowCellBuilder borderStyle(BorderStyle bs) {
+            cellStyle = cellStyle.borderStyle(bs);
+            return this;
+        }
+
+        public RowCellBuilder align(CellStyle.Align align) {
+            cellStyle = cellStyle.align(align);
+            return this;
+        }
+
+        public RowCellBuilder textStyle(TextStyle x) {
+            textStyle = x;
+            return this;
+        }
 
         // Do we want to (and how could we?) prevent adding a cell to itself?
-        public RowCellBuilder add(Renderable... rs) { Collections.addAll(rows, rs); return this; }
+        public RowCellBuilder add(Renderable... rs) {
+            Collections.addAll(rows, rs);
+            return this;
+        }
 
         public RowCellBuilder add(List<Renderable> js) {
-            if (js != null) { rows.addAll(js); } return this;
+            if (js != null) {
+                rows.addAll(js);
+            }
+            return this;
         }
 
         public RowCellBuilder add(String... ss) {
@@ -224,7 +258,8 @@ public class TableRowBuilder {
             return tableRowBuilder.addCellAt(c, colIdx);
         }
 
-        @Override public String toString() {
+        @Override
+        public String toString() {
             return new StringBuilder("RowCellBuilder(").append(tableRowBuilder).append(" colIdx=")
                     .append(colIdx).append(")").toString();
         }
@@ -237,11 +272,13 @@ public class TableRowBuilder {
         @Override
         public boolean equals(Object other) {
             // Cheapest operation first...
-            if (this == other) { return true; }
+            if (this == other) {
+                return true;
+            }
 
             if ((other == null) ||
-                !(other instanceof RowCellBuilder) ||
-                (this.hashCode() != other.hashCode())) {
+                    !(other instanceof RowCellBuilder) ||
+                    (this.hashCode() != other.hashCode())) {
                 return false;
             }
             // Details...

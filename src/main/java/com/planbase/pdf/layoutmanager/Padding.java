@@ -15,12 +15,12 @@
 package com.planbase.pdf.layoutmanager;
 
 /**
- Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
+ * Represents minimum spacing of the top, right, bottom, and left sides of PDF Page Items.
  */
 public class Padding {
 
     /**
-     Default padding of 1.5, 1.5, 2. 1.5 (top, right, bottom, left)
+     * Default padding of 1.5, 1.5, 2. 1.5 (top, right, bottom, left)
      */
     public static final Padding DEFAULT_TEXT_PADDING = new Padding(1.5f, 1.5f, 2f, 1.5f);
     public static final Padding NO_PADDING = new Padding(0f, 0f, 0f, 0f);
@@ -29,34 +29,53 @@ public class Padding {
     private final float right;
     private final float bottom;
     private final float left;
+
     private Padding(final float t, final float r, final float b, final float l) {
-        top = t; right = r; bottom = b; left = l;
+        top = t;
+        right = r;
+        bottom = b;
+        left = l;
     }
-    /** Like HTML it's top, right, bottom, left */
+
+    /**
+     * Like HTML it's top, right, bottom, left
+     */
     public static Padding of(float t, float r, float b, float l) {
-        if ((t == 0f) && (r == 0f) && (b == 0f) && (l == 0f)) { return NO_PADDING; }
+        if ((t == 0f) && (r == 0f) && (b == 0f) && (l == 0f)) {
+            return NO_PADDING;
+        }
         if ((t == 1.5f) && (r == 1.5f) && (b == 2f) && (l == 1.5f)) {
             return DEFAULT_TEXT_PADDING;
         }
         return new Padding(t, r, b, l);
     }
-    /** Sets all padding values equally */
+
+    /**
+     * Sets all padding values equally
+     */
     public static Padding of(float a) {
-        if (a == 0f) { return NO_PADDING; }
-        return new Padding(a,a,a,a);
+        if (a == 0f) {
+            return NO_PADDING;
+        }
+        return new Padding(a, a, a, a);
     }
 
-    public XyDim topLeftPadDim() { return XyDim.of(left, top); }
-    public XyDim botRightPadDim() { return XyDim.of(right, bottom); }
+    public XyDim topLeftPadDim() {
+        return XyDim.of(left, top);
+    }
+
+    public XyDim botRightPadDim() {
+        return XyDim.of(right, bottom);
+    }
 
     public XyDim subtractFrom(XyDim outer) {
         return XyDim.of(outer.x() - (left + right),
-                        outer.y() - (top + bottom));
+                outer.y() - (top + bottom));
     }
 
     public XyDim addTo(XyDim outer) {
         return XyDim.of(outer.x() + (left + right),
-                        outer.y() + (top + bottom));
+                outer.y() + (top + bottom));
     }
 
     public XyOffset applyTopLeft(XyOffset orig) {
@@ -66,20 +85,26 @@ public class Padding {
 //    public XyOffset topLeftPadOffset() { return XyOffset.of(left, -top); }
 //    public XyOffset botRightPadOffset() { return XyOffset.of(right, -bottom); }
 
-    @Override public boolean equals(Object other) {
+    @Override
+    public boolean equals(Object other) {
         // Cheapest operations first...
-        if (this == other) { return true; }
-        if ( !(other instanceof Padding) ) { return false; }
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Padding)) {
+            return false;
+        }
         // Details...
         final Padding that = (Padding) other;
 
         return (this.top == that.top) &&
-               (this.right == that.right) &&
-               (this.bottom == that.bottom) &&
-               (this.left == that.left);
+                (this.right == that.right) &&
+                (this.bottom == that.bottom) &&
+                (this.left == that.left);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         // There is generally no reason to ever have padding amounts that differ by less than 0.1
         // which in HTML-land would be a tenth of a pixel.  Since we're adding four roughly equal
         // values, if only one is off by 0.1, that becomes 0.025, hence multiplying times 40 instead
@@ -89,14 +114,25 @@ public class Padding {
 
     @Override
     public String toString() {
-        if ( (top == right) && (top == bottom) && (top == left) ) {
+        if ((top == right) && (top == bottom) && (top == left)) {
             return "Padding(" + top + ")";
         }
         return "Padding(t=" + top + ", r=" + right + ", b=" + bottom + ", l=" + left + ")";
     }
 
-    public float top() { return top; }
-    public float right() { return right; }
-    public float bottom() { return bottom; }
-    public float left() { return left; }
+    public float top() {
+        return top;
+    }
+
+    public float right() {
+        return right;
+    }
+
+    public float bottom() {
+        return bottom;
+    }
+
+    public float left() {
+        return left;
+    }
 }

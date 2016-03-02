@@ -14,17 +14,17 @@
 
 package com.planbase.pdf.layoutmanager;
 
-import java.io.IOException;
-
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 
+import java.io.IOException;
+
 /**
-Represents items to be later drawn to the page of a PDF file.  The z-index allows items to be drawn
- from back (lower-z-values) to front (higher-z-values).  When the z-index of two items is the same
- they will be drawn in the order they were created.  Implementing classes should give PdfItems
- ascending serialNumbers as they are created by calling super(num, z);  PdfItems are comparable
- and their natural ordering is the same order as they will be drawn: ascending by z-index,
- then by creation order.  The default z-index is zero.
+ * Represents items to be later drawn to the page of a PDF file.  The z-index allows items to be drawn
+ * from back (lower-z-values) to front (higher-z-values).  When the z-index of two items is the same
+ * they will be drawn in the order they were created.  Implementing classes should give PdfItems
+ * ascending serialNumbers as they are created by calling super(num, z);  PdfItems are comparable
+ * and their natural ordering is the same order as they will be drawn: ascending by z-index,
+ * then by creation order.  The default z-index is zero.
  */
 public abstract class PdfItem implements Comparable<PdfItem> {
 
@@ -33,7 +33,10 @@ public abstract class PdfItem implements Comparable<PdfItem> {
     private final long serialNumber;
     private final float z;
 
-    PdfItem(final long ord, final float zIndex) { z = zIndex; serialNumber = ord; }
+    PdfItem(final long ord, final float zIndex) {
+        z = zIndex;
+        serialNumber = ord;
+    }
 //    public static PdfItem of(final long ord, final float zIndex) {
 //        return new PdfItem(ord, zIndex);
 //    }
@@ -44,21 +47,31 @@ public abstract class PdfItem implements Comparable<PdfItem> {
     public int compareTo(PdfItem that) {
         // Ascending by Z (draw the lower-order background items first)
         float zDiff = this.z - that.z;
-        if (zDiff > 0) { return 1; } else if (zDiff < 0) { return -1; }
+        if (zDiff > 0) {
+            return 1;
+        } else if (zDiff < 0) {
+            return -1;
+        }
         // Ascending by creation order
         long oDiff = this.serialNumber - that.serialNumber;
-        if (oDiff > 0) { return 1; } else if (oDiff < 0) { return -1; }
+        if (oDiff > 0) {
+            return 1;
+        } else if (oDiff < 0) {
+            return -1;
+        }
         return 0;
     }
 
     @Override
     public boolean equals(Object other) {
         // Cheapest operation first...
-        if (this == other) { return true; }
+        if (this == other) {
+            return true;
+        }
         // Return false if can't be equal
-        if ( (other == null) ||
-             !(other instanceof PdfItem) ||
-             (this.hashCode() != other.hashCode()) ) {
+        if ((other == null) ||
+                !(other instanceof PdfItem) ||
+                (this.hashCode() != other.hashCode())) {
             return false;
         }
         // Details...

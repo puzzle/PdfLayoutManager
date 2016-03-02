@@ -30,11 +30,15 @@ public class TablePart {
     private final List<TableRowBuilder> rows = new ArrayList<TableRowBuilder>(1);
 
     private TablePart(TableBuilder t) {
-        tableBuilder = t; cellWidths.addAll(t.cellWidths()); cellStyle = t.cellStyle();
+        tableBuilder = t;
+        cellWidths.addAll(t.cellWidths());
+        cellStyle = t.cellStyle();
         textStyle = t.textStyle();
     }
 
-    public static TablePart of(TableBuilder t) { return new TablePart(t); }
+    public static TablePart of(TableBuilder t) {
+        return new TablePart(t);
+    }
 
 //    private TablePart(Table t, float[] a, CellStyle b, TextStyle c) {
 //        table = t; cellWidths = a; cellStyle = b; textStyle = c;
@@ -44,45 +48,87 @@ public class TablePart {
 //        return new TablePart(cellWidths, cellStyle, textStyle);
 //    }
 
-    public List<Float> cellWidths() { return Collections.unmodifiableList(cellWidths); }
-    public float cellWidth(int i) { return cellWidths.get(i); }
+    public List<Float> cellWidths() {
+        return Collections.unmodifiableList(cellWidths);
+    }
 
-//    public TablePart replaceAllCellWidths(List<Float> x) { cellWidths = x; return this; }
+    public float cellWidth(int i) {
+        return cellWidths.get(i);
+    }
+
+    //    public TablePart replaceAllCellWidths(List<Float> x) { cellWidths = x; return this; }
 //    public TablePart addCellWidths(List<Float> x) { cellWidths.addAll(x); return this; }
     public TablePart addCellWidths(float... ws) {
-        for (float w : ws) { cellWidths.add(w); }
+        for (float w : ws) {
+            cellWidths.add(w);
+        }
         return this;
     }
-    public TablePart addCellWidth(Float x) { cellWidths.add(x); return this; }
 
-    public int numCellWidths() { return cellWidths.size(); }
+    public TablePart addCellWidth(Float x) {
+        cellWidths.add(x);
+        return this;
+    }
+
+    public int numCellWidths() {
+        return cellWidths.size();
+    }
 
 //    public TablePart cellWidths(float[] x) { return new Builder().cellWidths(cellWidths).build(); }
 
-    public CellStyle cellStyle() { return cellStyle; }
-    public TablePart cellStyle(CellStyle x) { cellStyle = x; return this; }
-    public TablePart align(CellStyle.Align a) { cellStyle = cellStyle.align(a); return this; }
+    public CellStyle cellStyle() {
+        return cellStyle;
+    }
+
+    public TablePart cellStyle(CellStyle x) {
+        cellStyle = x;
+        return this;
+    }
+
+    public TablePart align(CellStyle.Align a) {
+        cellStyle = cellStyle.align(a);
+        return this;
+    }
 
 //    public TablePart cellStyle(CellStyle x) { return new Builder().cellStyle(cellStyle).build(); }
 
-    public TextStyle textStyle() { return textStyle; }
-    public TablePart textStyle(TextStyle x) { textStyle = x; return this; }
+    public TextStyle textStyle() {
+        return textStyle;
+    }
 
-    public float minRowHeight() { return minRowHeight; }
-    public TablePart minRowHeight(float f) { minRowHeight = f; return this; }
+    public TablePart textStyle(TextStyle x) {
+        textStyle = x;
+        return this;
+    }
 
-    public TableRowBuilder rowBuilder() { return TableRowBuilder.of(this); }
+    public float minRowHeight() {
+        return minRowHeight;
+    }
 
-    public TablePart addRow(TableRowBuilder trb) { rows.add(trb); return this; }
+    public TablePart minRowHeight(float f) {
+        minRowHeight = f;
+        return this;
+    }
 
-    public TableBuilder buildPart() { return tableBuilder.addPart(this); }
+    public TableRowBuilder rowBuilder() {
+        return TableRowBuilder.of(this);
+    }
+
+    public TablePart addRow(TableRowBuilder trb) {
+        rows.add(trb);
+        return this;
+    }
+
+    public TableBuilder buildPart() {
+        return tableBuilder.addPart(this);
+    }
 
     public XyDim calcDimensions() {
         XyDim maxDim = XyDim.ZERO;
         for (TableRowBuilder row : rows) {
             XyDim wh = row.calcDimensions();
             maxDim = XyDim.of(Math.max(wh.x(), maxDim.x()),
-                              maxDim.y() + wh.y());
+                    maxDim.y() + wh.y());
         }
         return maxDim;
     }
@@ -92,9 +138,9 @@ public class TablePart {
         for (TableRowBuilder row : rows) {
 //            System.out.println("\tAbout to render row: " + row);
             XyOffset rl = row.render(lp, XyOffset.of(outerTopLeft.x(), rightmostLowest.y()),
-                                     allPages);
+                    allPages);
             rightmostLowest = XyOffset.of(Math.max(rl.x(), rightmostLowest.x()),
-                                          Math.min(rl.y(), rightmostLowest.y()));
+                    Math.min(rl.y(), rightmostLowest.y()));
         }
         return rightmostLowest;
     }

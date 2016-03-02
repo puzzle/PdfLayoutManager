@@ -14,11 +14,11 @@
 
 package com.planbase.pdf.layoutmanager;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
- Represents the color and width of a line.  DashStyle (and maybe capStyle or joinStyle?) could be
- added later.  Immutable.
+ * Represents the color and width of a line.  DashStyle (and maybe capStyle or joinStyle?) could be
+ * added later.  Immutable.
  */
 public class LineStyle {
     public static final float DEFAULT_WIDTH = 1;
@@ -27,19 +27,34 @@ public class LineStyle {
     private final float width;
 
     private LineStyle(Color c, float w) {
-        if (c == null) { throw new IllegalArgumentException("Line Style must have a color."); }
+        if (c == null) {
+            throw new IllegalArgumentException("Line Style must have a color.");
+        }
         if (w <= 0) {
             throw new IllegalArgumentException("Line Style must have a positive width.");
         }
-        color = c; width = w;
+        color = c;
+        width = w;
     }
-    /** Factory method */
-    public static LineStyle of(Color c, float w) { return new LineStyle(c, w); }
 
-    public static LineStyle of(Color c) { return new LineStyle(c, DEFAULT_WIDTH); }
+    /**
+     * Factory method
+     */
+    public static LineStyle of(Color c, float w) {
+        return new LineStyle(c, w);
+    }
 
-    public Color color() { return color; }
-    public float width() { return width; }
+    public static LineStyle of(Color c) {
+        return new LineStyle(c, DEFAULT_WIDTH);
+    }
+
+    public Color color() {
+        return color;
+    }
+
+    public float width() {
+        return width;
+    }
 
     @Override
     public int hashCode() {
@@ -51,11 +66,13 @@ public class LineStyle {
     @Override
     public boolean equals(Object other) {
         // Cheapest operation first...
-        if (this == other) { return true; }
+        if (this == other) {
+            return true;
+        }
         // Ensure compatibility with HashCode
-        if ( (other == null) ||
-             !(other instanceof LineStyle) ||
-             (this.hashCode() != other.hashCode()) ) {
+        if ((other == null) ||
+                !(other instanceof LineStyle) ||
+                (this.hashCode() != other.hashCode())) {
             return false;
         }
         // Make a meaningful content-based comparison
@@ -63,7 +80,8 @@ public class LineStyle {
         return (this.width == that.width) && this.color().equals(that.color());
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "LineStyle(" + Utils.toString(color) + " w=" + width + ")";
     }
 }

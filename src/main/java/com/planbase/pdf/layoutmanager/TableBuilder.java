@@ -31,40 +31,76 @@ public class TableBuilder implements Renderable {
     private final List<TablePart> parts = new ArrayList<TablePart>(2);
 
     private TableBuilder(LogicalPage lp, XyOffset tl) {
-        logicalPage = lp; topLeft = tl;
+        logicalPage = lp;
+        topLeft = tl;
     }
+
     public static TableBuilder of(LogicalPage lp, XyOffset tl) {
         return new TableBuilder(lp, tl);
     }
 
-    public XyOffset topLeft() { return topLeft; }
+    public XyOffset topLeft() {
+        return topLeft;
+    }
 
-    public List<Float> cellWidths() { return Collections.unmodifiableList(cellWidths); }
-    public TableBuilder addCellWidths(List<Float> x) { cellWidths.addAll(x); return this; }
-    public TableBuilder addCellWidths(float... ws) {
-        for (float w : ws) { cellWidths.add(w); }
+    public List<Float> cellWidths() {
+        return Collections.unmodifiableList(cellWidths);
+    }
+
+    public TableBuilder addCellWidths(List<Float> x) {
+        cellWidths.addAll(x);
         return this;
     }
-    public TableBuilder addCellWidth(Float x) { cellWidths.add(x); return this; }
 
-    public CellStyle cellStyle() { return cellStyle; }
-    public TableBuilder cellStyle(CellStyle x) { cellStyle = x; return this; }
+    public TableBuilder addCellWidths(float... ws) {
+        for (float w : ws) {
+            cellWidths.add(w);
+        }
+        return this;
+    }
 
-    public TextStyle textStyle() { return textStyle; }
-    public TableBuilder textStyle(TextStyle x) { textStyle = x; return this; }
+    public TableBuilder addCellWidth(Float x) {
+        cellWidths.add(x);
+        return this;
+    }
 
-    public TableBuilder addPart(TablePart tp) { parts.add(tp); return this; }
+    public CellStyle cellStyle() {
+        return cellStyle;
+    }
 
-    public TablePart partBuilder() { return TablePart.of(this); }
+    public TableBuilder cellStyle(CellStyle x) {
+        cellStyle = x;
+        return this;
+    }
 
-    public XyOffset buildTable() { return logicalPage.addTable(this); }
+    public TextStyle textStyle() {
+        return textStyle;
+    }
+
+    public TableBuilder textStyle(TextStyle x) {
+        textStyle = x;
+        return this;
+    }
+
+    public TableBuilder addPart(TablePart tp) {
+        parts.add(tp);
+        return this;
+    }
+
+    public TablePart partBuilder() {
+        return TablePart.of(this);
+    }
+
+    public XyOffset buildTable() {
+        return logicalPage.addTable(this);
+    }
 
     public XyDim calcDimensions(float maxWidth) {
         XyDim maxDim = XyDim.ZERO;
         for (TablePart part : parts) {
             XyDim wh = part.calcDimensions();
             maxDim = XyDim.of(Math.max(wh.x(), maxDim.x()),
-                              maxDim.y() + wh.y());
+                    maxDim.y() + wh.y());
         }
         return maxDim;
     }
@@ -79,9 +115,9 @@ public class TableBuilder implements Renderable {
         for (TablePart part : parts) {
 //            System.out.println("About to render part: " + part);
             XyOffset rl = part.render(lp, XyOffset.of(outerTopLeft.x(), rightmostLowest.y()),
-                                      allPages);
+                    allPages);
             rightmostLowest = XyOffset.of(Math.max(rl.x(), rightmostLowest.x()),
-                                          Math.min(rl.y(), rightmostLowest.y()));
+                    Math.min(rl.y(), rightmostLowest.y()));
         }
         return rightmostLowest;
     }

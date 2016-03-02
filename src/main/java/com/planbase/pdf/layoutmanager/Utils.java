@@ -1,19 +1,24 @@
 package com.planbase.pdf.layoutmanager;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Holds utility functions.
  */
 final class Utils {
-    private Utils() { throw new UnsupportedOperationException("No instances!"); }
+    private Utils() {
+        throw new UnsupportedOperationException("No instances!");
+    }
 
     public static String toString(Color c) {
-        if (c == null) { return "null"; }
+        if (c == null) {
+            return "null";
+        }
         return new StringBuilder("#").append(twoDigitHex(c.getRed()))
                 .append(twoDigitHex(c.getGreen()))
                 .append(twoDigitHex(c.getBlue())).toString();
     }
+
     public static String twoDigitHex(int i) {
         String h = Integer.toHexString(i);
         return (h.length() < 2) ? "0" + h : h;

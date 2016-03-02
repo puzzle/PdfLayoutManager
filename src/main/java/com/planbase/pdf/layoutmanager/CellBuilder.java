@@ -18,7 +18,9 @@ public interface CellBuilder {
 
     public CellBuilder add(List<Renderable> js);
 
-    /** Must have textStyle set properly (or inherited) before calling this */
+    /**
+     * Must have textStyle set properly (or inherited) before calling this
+     */
     public CellBuilder add(String... ss);
 
     public CellBuilder add(TextStyle ts, List<String> ls);
