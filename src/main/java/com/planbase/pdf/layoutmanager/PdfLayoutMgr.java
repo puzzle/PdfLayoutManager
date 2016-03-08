@@ -17,6 +17,7 @@ package com.planbase.pdf.layoutmanager;
 import org.apache.pdfbox.exceptions.COSVisitorException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.color.PDColorSpace;
 import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
@@ -27,6 +28,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+
+import static org.apache.pdfbox.pdmodel.PDPage.PAGE_SIZE_LETTER;
 
 /**
  * <p>The main class in this package; it handles page and line breaks.</p>
@@ -169,13 +172,22 @@ public class PdfLayoutMgr {
 
     /**
      * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across
+     * two or more physical pages) in the requested page orientation and the page size.
+     */
+    @SuppressWarnings("UnusedDeclaration") // Part of end-user public interface
+    public LogicalPage logicalPageStart(LogicalPage.Orientation o, PDRectangle pageSize) {
+        PageBuffer pb = new PageBuffer(pages.size() + 1);
+        pages.add(pb);
+        return LogicalPage.of(this, o, pageSize);
+    }
+
+    /**
+     * Tells this PdfLayoutMgr that you want to start a new logical page (which may be broken across
      * two or more physical pages) in the requested page orientation.
      */
     @SuppressWarnings("UnusedDeclaration") // Part of end-user public interface
     public LogicalPage logicalPageStart(LogicalPage.Orientation o) {
-        PageBuffer pb = new PageBuffer(pages.size() + 1);
-        pages.add(pb);
-        return LogicalPage.of(this, o);
+        return logicalPageStart(o, PAGE_SIZE_LETTER);
     }
 
     /**
