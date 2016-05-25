@@ -14,8 +14,8 @@
 
 package com.planbase.pdf.layoutmanager;
 
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.awt.*;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 public class TextStyle {
 
-    private final PDType1Font font;
+    private final PDFont font;
     private final Color textColor;
     private final float fontSize;
 
@@ -36,7 +36,7 @@ public class TextStyle {
     private final float descent;
     private final float leading;
 
-    private TextStyle(PDType1Font f, float sz, Color tc) {
+    private TextStyle(PDFont f, float sz, Color tc) {
         if (f == null) {
             throw new IllegalArgumentException("Font must not be null");
         }
@@ -72,7 +72,7 @@ public class TextStyle {
         avgCharWidth = avgFontWidth * fontSize;
     }
 
-    public static TextStyle of(PDType1Font f, float sz, Color tc) {
+    public static TextStyle of(PDFont f, float sz, Color tc) {
         return new TextStyle(f, sz, tc);
     }
 
@@ -92,7 +92,7 @@ public class TextStyle {
         }
     }
 
-    public PDType1Font font() {
+    public PDFont font() {
         return font;
     }
 
